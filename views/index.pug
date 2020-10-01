@@ -1,0 +1,14 @@
+
+html
+  head
+    title Amazing flight dist calc beepboop
+    style
+      include ../style.css
+  body
+    h1= 'Top Ten Longest Flights. You won\'t believe it'
+    div(class='flight-card-container')
+      for flight in flightDetails
+        div(class='flight-card')
+          h3 From: #{flight.srcAirport.city}
+          h3 To: #{flight.dstAirport.city}
+          h3 Distance: #{flight.dist} km
