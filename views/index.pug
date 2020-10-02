@@ -4,11 +4,24 @@ html
     title Amazing flight dist calc beepboop
     style
       include ../style.css
+    link(href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=Roboto&display=swap" rel="stylesheet")
   body
-    h1= 'Top Ten Longest Flights. You won\'t believe it'
+    h1= 'Top Ten Longest Flights. You won\'t believe it.'
     div(class='flight-card-container')
       for flight in flightDetails
         div(class='flight-card')
-          h3 From: #{flight.srcAirport.city}
-          h3 To: #{flight.dstAirport.city}
-          h3 Distance: #{flight.dist} km
+          div(class="flight-card-route")
+            img(src='planeDepart.png' style='width:50px; height:50px;')
+            div(class='flight-card-name')
+              h3(class="flight-card-code") #{flight.srcAirport.iataIcao}
+              h3(class="flight-card-airport") #{flight.srcAirport.airport}
+            h3(class="flight-card-country") #{flight.srcAirport.city}
+          div(class="distance-time")
+            h3(class="distance") #{flight.dist} km 
+            h3(class="time") est. #{flight.time}
+          div(class="flight-card-route")
+            img(src='planeArrive.png' style='width:50px; height:50px;')
+            div(class='flight-card-name')
+              h3(class="flight-card-code") #{flight.dstAirport.iataIcao}
+              h3(class="flight-card-airport") #{flight.dstAirport.airport}
+            h3(class="flight-card-country") #{flight.dstAirport.city}

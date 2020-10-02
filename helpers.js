@@ -15,4 +15,21 @@ const calcCrow = (lat1, lon1, lat2, lon2) => {
     return d.toFixed(0);
 };
 
-module.exports = { calcCrow }
+const removeQuotes = str => str.replace(/"/g, '')
+
+const formatCity = timeZone => removeQuotes(timeZone).replace(/(?=\/).*/, '').replace('_', ' ');
+
+const getTimeFromDist = distance => {
+    const time = distance / 926
+    const hours = Math.trunc(time);
+    const minutes = (((time - Math.floor(time)) / 60) * 1000).toFixed(0);
+    return `${hours} h ${minutes} m`
+}
+
+const removeDuplicates = (route) => {
+    return route.slice(0, 100)
+        .filter((route, index, self) => index === self
+        .findIndex((t) => (t.dist === route.dist)))
+}
+
+module.exports = { calcCrow, removeQuotes, formatCity, getTimeFromDist, removeDuplicates }

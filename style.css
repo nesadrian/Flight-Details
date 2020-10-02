@@ -1,25 +1,95 @@
+
 body {
     background-color: #303841;
-    color: #eeeeee
+    color: #EEEEEE;
+    font-family: 'Roboto', sans-serif;
+    margin: 20px;
 }
-
 h1 {
     text-align: center;
 }
-
 .flight-card-container {
-    display: inline-flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+/*     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center; */
 }
-
 .flight-card {
-    background-color: #ff5722;
+    background-color: #FF5722;
     font-size: 1em;
-    width: 200px;
     padding: 15px;
     border-radius: 5px;
-    margin: 10px;
-    border: 5px solid;
-    border-color: #00adb5;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 9px 10px 16px -9px rgba(0, 0, 0, 0.75);
+}
+
+.flight-card-route {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.flight-card-name {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0px 10px;
+}
+
+.flight-card-code {
+    margin: 0;
+    font-size: 1em;
+}
+
+.flight-card-airport {
+    margin: 0;
+    font-size: 0.5em;
+}
+
+.flight-card-country {
+    flex: 1;
+    text-align: end;
+    font-size: 1em;
+}
+
+.distance {
+    text-align: center;
+    font-size: 0.75em;
+    margin: 0;
+}
+
+.time {
+    font-size: 0.5em;
+    text-align: center;
+    margin: 0;
+}
+
+.distance-time {
+    padding: 5px;
+    border-top: 1px solid #3038415d;
+    border-bottom: 1px solid #3038415d;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .flight-card-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+  }
+@media (min-width: 481px) and (max-width: 767px) {
+    .flight-card-container {
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 20px;
+    }
+}
+  @media (min-width: 320px) and (max-width: 480px) {
+    .flight-card-container {
+        grid-template-columns: 1fr;
+    }
 }

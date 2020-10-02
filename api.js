@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { calcCrow } = require('./helpers');
+const { calcCrow, removeQuotes, formatCity, getTimeFromDist, removeDuplicates } = require('./helpers');
 
 const textToArrays = text => {
     return text
@@ -12,13 +12,13 @@ const textToArrays = text => {
 const getAirportsData = data => {
     const airportDataArr = textToArrays(data);
     const airportDataJson = airportDataArr.map(airportData => {
+        const iataIcao = airportData[4] !== '\\N' ? airportData[4] : airportData[5];
         return jsonData = {
             "id": airportData[0],
-            "airport": airportData[1],
-            "city": airportData[2],
-            "country": airportData[3],
-            "iata": airportData[4],
-            "icao": airportData[5],
+            "airport": removeQuotes(airportData[1]),
+            "city": formatCity(airportData[11]),
+            "country": removeQuotes(airportData[3]),
+            "iataIcao": removeQuotes(iataIcao),
             "lat": airportData[6],
             "lon": airportData[7]
         }
@@ -49,6 +49,29 @@ const getAirportById = (id, airports) => airports.find(airport => airport.id ===
 
 //const getRouteById = (id, routes) => routes.find(route => route.id === id);
 
+const getRoutesFromAirport = (airportId, cb) => {
+    const airport = getAirportById(airportId);
+    getRoutes(routes => {
+        let flights = [];
+        routes.forEach(route => {
+            if(airport.id === route.srcId) {
+                const dstAirport = getAirportById(route.dstId);
+                if(!isNaN(airport.lat) && !isNaN(airport.lon) && !isNaN(dstAirport.lat) && !isNaN(dstAirport.lon)) {
+                    const distance = calcCrow(+airport.lat, +airport.lon, +dstAirport.lat, +dstAirport.lon);
+                    const flightInfo = {
+                        "srcAirport": airport,
+                        "dstAirport": dstAirport,
+                        "dist": distance,
+                        "time": getTimeFromDist(distance)
+                    }
+                    flights.push(flightInfo);
+                }
+            }
+        })
+        cb(flights);
+    })
+}
+
 const getLongFlightDetails = (cb) => {
     getAirports(airports => {
         getRoutes(routes => {
@@ -62,22 +85,21 @@ const getLongFlightDetails = (cb) => {
                         const flightInfo = {
                             "srcAirport": srcAirport,
                             "dstAirport": dstAirport,
-                            "dist": distance
+                            "dist": distance,
+                            "time": getTimeFromDist(distance)
                         }
                         longDistFlights.push(flightInfo);
                     }
                 }
             })
-            let tenLongDistFlights = longDistFlights.sort((a, b) => b.dist - a.dist).slice(0, 10);
+            let tenLongDistFlights = longDistFlights.sort((a, b) => b.dist - a.dist).slice(0, 25);
+            tenLongDistFlights = removeDuplicates(tenLongDistFlights);
             cb(tenLongDistFlights);
         })
     })
 }
 
 module.exports = {
-    getRoutes,
-    //getRouteById,
-    getAirports,
-    getAirportById,
-    getLongFlightDetails
+    getLongFlightDetails,
+    getRoutesFromAirport
 }
