@@ -1,13 +1,11 @@
 const fetch = require('node-fetch');
 const { calcCrow, removeQuotes, formatCity, getTimeFromDist, removeDuplicates, textToArrays, getAirportCode, validAirports } = require('./helpers');
 
-const getAirportById = (id, airports) => airports.find(airport => airport.id === id);
-
 const formatAirportData = data => {
     const airportData = textToArrays(data);
     return airportData.map(airport => ({
             "id": airport[0],
-            "airport": removeQuotes(airport[1]),
+            "name": removeQuotes(airport[1]),
             "city": formatCity(airport[11]),
             "country": removeQuotes(airport[3]),
             "code": getAirportCode(airport[4], airport[5]),
@@ -34,30 +32,9 @@ const getRoutes = () => fetch('https://raw.githubusercontent.com/jpatokal/openfl
     .then(data => data.text())
     .then(result => formatRouteData(result))
 
-const getAirportFlights = async (airportId) => {
-    const airports = await getAirports();
-    const routes = await getRoutes();
-    const srcAirport = getAirportById(airportId.toString(), airports);
-    let flights = [];
-    routes.forEach(route => {
-        if(srcAirport.id === route.srcId) {
-            const dstAirport = getAirportById(route.dstId, airports);
-            if(validAirports(srcAirport, dstAirport)) {
-                const distance = calcCrow(+srcAirport.lat, +srcAirport.lon, +dstAirport.lat, +dstAirport.lon);
-                const flightDetails = {
-                    "srcAirport": srcAirport,
-                    "dstAirport": dstAirport,
-                    "dist": distance,
-                    "time": getTimeFromDist(distance)
-                }
-                flights.push(flightDetails);
-            }
-        }
-    })
-    return flights;
-}
+const getAirportById = (id, airports) => airports.find(airport => airport.id === id);
 
-const getTenLongDistFlights = async () => {
+const getAllFlights = async () => {
     const airports = await getAirports();
     const routes = await getRoutes();
     let flights = [];
@@ -75,6 +52,16 @@ const getTenLongDistFlights = async () => {
             flights.push(flightInfo);
         }
     })
+    return flights;
+}
+
+const getAirportFlights = async (airportId) => {
+    let flights = await getAllFlights();
+    return flights.filter(flight => airportId === flight.srcAirport.id || airportId === flight.dstAirport.id)
+}
+
+const getTenLongDistFlights = async () => {
+    const flights = await getAllFlights();
     let tenLongDistFlights = flights.sort((a, b) => b.dist - a.dist).slice(0, 25);
     tenLongDistFlights = removeDuplicates(tenLongDistFlights);
     return tenLongDistFlights;
@@ -82,5 +69,7 @@ const getTenLongDistFlights = async () => {
 
 module.exports = {
     getTenLongDistFlights,
-    getAirportFlights
+    getAirportFlights,
+    getAirportById,
+    getAirports
 }
