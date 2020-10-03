@@ -50,25 +50,28 @@ const getAirportById = (id, airports) => airports.find(airport => airport.id ===
 //const getRouteById = (id, routes) => routes.find(route => route.id === id);
 
 const getRoutesFromAirport = (airportId, cb) => {
-    const airport = getAirportById(airportId);
-    getRoutes(routes => {
-        let flights = [];
-        routes.forEach(route => {
-            if(airport.id === route.srcId) {
-                const dstAirport = getAirportById(route.dstId);
-                if(!isNaN(airport.lat) && !isNaN(airport.lon) && !isNaN(dstAirport.lat) && !isNaN(dstAirport.lon)) {
-                    const distance = calcCrow(+airport.lat, +airport.lon, +dstAirport.lat, +dstAirport.lon);
-                    const flightInfo = {
-                        "srcAirport": airport,
-                        "dstAirport": dstAirport,
-                        "dist": distance,
-                        "time": getTimeFromDist(distance)
+    getAirports(airports => {
+        console.log(airports[0])
+        const airport = getAirportById(airportId.toString(), airports);
+        getRoutes(routes => {
+            let flights = [];
+            routes.forEach(route => {
+                if(airport.id === route.srcId) {
+                    const dstAirport = getAirportById(route.dstId, airports);
+                    if(!isNaN(airport.lat) && !isNaN(airport.lon) && !isNaN(dstAirport.lat) && !isNaN(dstAirport.lon)) {
+                        const distance = calcCrow(+airport.lat, +airport.lon, +dstAirport.lat, +dstAirport.lon);
+                        const flightInfo = {
+                            "srcAirport": airport,
+                            "dstAirport": dstAirport,
+                            "dist": distance,
+                            "time": getTimeFromDist(distance)
+                        }
+                        flights.push(flightInfo);
                     }
-                    flights.push(flightInfo);
                 }
-            }
+            })
+            cb(flights);
         })
-        cb(flights);
     })
 }
 
