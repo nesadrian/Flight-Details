@@ -34,6 +34,10 @@ const getRoutes = () => fetch('https://raw.githubusercontent.com/jpatokal/openfl
 
 const getAirportById = (id, airports) => airports.find(airport => airport.id === id);
 
+const sortAirportsAsc = (airports) => airports.sort((a, b) => b.dist + a.dist);
+
+const sortAirportsDsc = (airports) => airports.sort((a, b) => b.dist - a.dist);
+
 const getAllFlights = async () => {
     const airports = await getAirports();
     const routes = await getRoutes();
@@ -68,7 +72,7 @@ const getTenLongDistFlights = async () => {
 }
 
 module.exports = {
-    getTenLongDistFlights,
+    getAllFlights,
     getAirportFlights,
     getAirportById,
     getAirports

@@ -5,22 +5,46 @@ html
       include ../style.css
     link(href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=Roboto&display=swap" rel="stylesheet")
   body
-    h1= title
-    div(class='flight-card-container')
-      for flight in flightDetails
-        div(class='flight-card')
-          div(class="flight-card-route")
-            img(src='planeDepart.png' style='width:50px; height:50px;')
-            div(class='flight-card-name')
-              h3(class="flight-card-code") #{flight.srcAirport.iataIcao}
-              h3(class="flight-card-airport") #{flight.srcAirport.name}
-            h3(class="flight-card-country") #{flight.srcAirport.city}
-          div(class="distance-time")
-            h3(class="distance") #{flight.dist} km 
-            h3(class="time") est. #{flight.time}
-          div(class="flight-card-route")
-            img(src='planeArrive.png' style='width:50px; height:50px;')
-            div(class='flight-card-name')
-              h3(class="flight-card-code") #{flight.dstAirport.iataIcao}
-              h3(class="flight-card-airport") #{flight.dstAirport.name}
-            h3(class="flight-card-country") #{flight.dstAirport.city}
+    div(class="header")
+      h1= title
+    div(class="content")
+      div(class='flight-card-container')
+        for flight in flightDetails
+          div(class='flight-card')
+            div(class="flight-card-route")
+              img(src='planeDepart.png' style='width:50px; height:50px;')
+              div(class='flight-card-name')
+                h3(class="flight-card-code") #{flight.srcAirport.code}
+                h3(class="flight-card-airport") #{flight.srcAirport.name}
+              h3(class="flight-card-country") #{flight.srcAirport.city}
+            div(class="distance-time")
+              h3(class="distance") #{flight.dist} km 
+              h3(class="time") est. #{flight.time}
+            div(class="flight-card-route")
+              img(src='planeArrive.png' style='width:50px; height:50px;')
+              div(class='flight-card-name')
+                h3(class="flight-card-code") #{flight.dstAirport.code}
+                h3(class="flight-card-airport") #{flight.dstAirport.name}
+              h3(class="flight-card-country") #{flight.dstAirport.city}
+    div(class="footer")  
+      div(class="page-buttons-container")
+        if pageButtonsPrev
+          form(type="GET" action=`/${pageButtonsPrev}`)
+            button(class="page-button" type="submit" value=pageButtonsPrev) <
+          if pageButtonsFirst
+            form(type="GET" action=`/${pageButtonsFirst}`)
+              button(class="page-button" type="submit" value=pageButtonsFirst) #{pageButtonsFirst}
+            div(class="page-button-empty") ...
+        for button in pageButtons
+          form(type="GET" action=`/${button}`)
+            if button === pageButtonsSelected
+              button(class="page-button selected" type="submit" value=button) #{button}
+            else
+              button(class="page-button" type="submit" value=button) #{button}
+        if pageButtonsLast
+          div(class="page-button-empty") ...
+          form(type="GET" action=`/${pageButtonsLast}`)
+            button(class="page-button" type="submit" value=pageButtonsLast) #{pageButtonsLast}
+        if pageButtonsNext
+          form(type="GET" action=`/${pageButtonsNext}`)
+            button(class="page-button" type="submit" value=pageButtonsNext) >

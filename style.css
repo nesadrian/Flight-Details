@@ -9,6 +9,10 @@ h1 {
     text-align: center;
 }
 
+.content {
+    margin-bottom: 20px;
+}
+
 .flight-card-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -73,6 +77,40 @@ h1 {
     padding: 5px;
     border-top: 1px solid #3038415d;
     border-bottom: 1px solid #3038415d;
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+}
+
+.page-buttons-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.page-button {
+    height: 40px;
+    width: 40px;
+    background-color: #FF5722;
+    color: #EEEEEE;
+    border: 0.5px solid #303841;
+}
+
+.page-button:hover {
+    background-color: #dd491c;
+}
+
+.selected {
+    background-color: #dd491c;
+}
+
+.page-button-empty {
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    font-size: 37.5px;
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {

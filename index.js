@@ -1,14 +1,43 @@
 const express = require('express');
-const { getTenLongDistFlights, getAirportFlights, getAirportById, getAirports } = require('./src/api');
+const { getAllFlights, getAirportFlights, getAirportById, getAirports } = require('./src/api');
 const app = express();
 app.set('view engine', 'pug');
 app.use(express.static('img'));
 
-app.get('/', async (req, res) => {
-    const tenLongDistFlights = await getTenLongDistFlights();
+app.get('/:page', async (req, res) => {
+    let pageNum = +req.params.page;
+    if(pageNum < 1) res.redirect('/1');
+
+    const flights = await getAllFlights();
+
+    const flightCount = flights.length;
+    const perPage = 12;
+    const pageCount = Math.ceil(flightCount / perPage);
+
+    if(pageNum > pageCount) res.redirect('/' + pageCount);
+
+    let from = (pageNum - 1) * perPage;
+    let to = from + perPage > flightCount ? flightCount : from + perPage;
+    const page = flights.slice(from, to);
+
+    // Too tired. Refactor at some point
+    let pageNumbers = [];
+    let i = pageNum - 3 >= 1 ? pageNum - 3 : 1;
+    while(i < pageNum + 4) {
+        if(i === pageCount) break;
+        pageNumbers.push(i);
+        i++;
+    }
+
     res.render('index', {
-        title: 'Ten Longest Distance Flights',
-        flightDetails: tenLongDistFlights,
+        title: 'All Flights',
+        flightDetails: page,
+        pageButtons: pageNumbers,
+        pageButtonsSelected: pageNum,
+        pageButtonsPrev: pageNum > 1 ? pageNum - 1 : undefined,
+        pageButtonsNext: pageNum < pageCount ? pageNum + 1 : undefined,
+        pageButtonsFirst: pageNum > 3 ? 1 : undefined,
+        pageButtonsLast: pageNum < pageCount - 3 ? pageCount : undefined
     });
 });
 
