@@ -1,12 +1,13 @@
 
+
 html
   head
-    title Amazing flight dist calc beepboop
+    title Flight Cards
     style
       include ../style.css
     link(href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=Roboto&display=swap" rel="stylesheet")
   body
-    h1= 'Top Ten Longest Flights. You won\'t believe it.'
+    h1= 'Flight Cards'
     div(class='flight-card-container')
       for flight in flightDetails
         div(class='flight-card')

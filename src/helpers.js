@@ -32,4 +32,35 @@ const removeDuplicates = (route) => {
         .findIndex((t) => (t.dist === route.dist)))
 }
 
-module.exports = { calcCrow, removeQuotes, formatCity, getTimeFromDist, removeDuplicates }
+const textToArrays = text => {
+    return text
+    .toString()
+    .split('\n')
+    .filter(r => r !== '')
+    .map(r => r.split(','));
+}
+
+const getAirportCode = (iata, icao) => {
+    if (iata !== '\\N') return removeQuotes(iata);
+    else if (icao !== '\\N') return removeQuotes(icao);
+    else return '----';
+}
+
+const validAirports = (srcAirport, dstAirport) => {
+    if(srcAirport && dstAirport) {
+        return !isNaN(srcAirport.lat) && !isNaN(srcAirport.lon) && !isNaN(dstAirport.lat) && !isNaN(dstAirport.lon)
+    } else {
+        return false;
+    }
+}
+
+module.exports = {
+    calcCrow,
+    removeQuotes,
+    formatCity,
+    getTimeFromDist,
+    removeDuplicates,
+    textToArrays,
+    getAirportCode,
+    validAirports
+}
