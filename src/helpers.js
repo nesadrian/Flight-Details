@@ -54,6 +54,26 @@ const validAirports = (srcAirport, dstAirport) => {
     }
 }
 
+const getPageButtonsNums = (pageNum, pageCount) => {
+    let pageNumbers = [];
+    let i = pageNum - 3 >= 1 ? pageNum - 3 : 1;
+    if(pageNum > 5 && pageNum > pageCount - 3) i = pageCount - 6
+    let end = (pageNum < 5 && pageNum < pageCount - 3) ? 8 : pageNum + 4;
+    while(i < end) {
+        if(i > pageCount) break;
+        pageNumbers.push(i);
+        i++;
+    }
+    return pageNumbers;
+}
+
+const getPage = (flights, perPage, pageNum) => {
+    const flightCount = flights.length;
+    let from = (pageNum - 1) * perPage;
+    let to = from + perPage > flightCount ? flightCount : from + perPage;
+    return flights.slice(from, to);
+}
+
 module.exports = {
     calcCrow,
     removeQuotes,
@@ -62,5 +82,7 @@ module.exports = {
     removeDuplicates,
     textToArrays,
     getAirportCode,
-    validAirports
+    validAirports,
+    getPageButtonsNums,
+    getPage
 }

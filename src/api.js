@@ -73,7 +73,7 @@ const getTenLongDistFlights = async () => {
 
 module.exports = {
     getAllFlights,
-    getAirportFlights,
     getAirportById,
-    getAirports
+    sortAirportsAsc,
+    sortAirportsDsc
 }

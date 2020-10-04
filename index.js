@@ -1,5 +1,6 @@
 const express = require('express');
-const { getAllFlights, getAirportFlights, getAirportById, getAirports } = require('./src/api');
+const { getAllFlights, getAirportById, sortAirportsAsc, sortAirportsDsc } = require('./src/api');
+const { getPageButtonsNums, getPage } = require('./src/helpers');
 const app = express();
 app.set('view engine', 'pug');
 app.use(express.static('img'));
@@ -19,29 +20,18 @@ app.get('/:page', async (req, res) => {
 
     if(pageNum > pageCount) res.redirect('/' + pageCount);
 
-    let from = (pageNum - 1) * perPage;
-    let to = from + perPage > flightCount ? flightCount : from + perPage;
-    const page = flights.slice(from, to);
-
-    let pageNumbers = [];
-    let i = pageNum - 3 >= 1 ? pageNum - 3 : 1;
-    if(pageNum > 5 && pageNum > pageCount - 3) i = pageCount - 6
-    let end = (pageNum < 5 && pageNum < pageCount - 3) ? 8 : pageNum + 4;
-    while(i < end) {
-        if(i > pageCount) break;
-        pageNumbers.push(i);
-        i++;
-    }
+    const page = getPage(flights, perPage, pageNum)
+    const pageButtonNums = getPageButtonsNums(pageNum, pageCount);
 
     res.render('index', {
         title: 'All Flights',
         flightDetails: page,
-        pageButtons: pageNumbers,
+        pageButtons: pageButtonNums,
         pageButtonsSelected: pageNum,
-        pageButtonsPrev: pageNum > 1 ? pageNum - 1 : undefined,
-        pageButtonsNext: pageNum < pageCount ? pageNum + 1 : undefined,
-        pageButtonsFirst: pageNum > 4 ? 1 : undefined,
-        pageButtonsLast: pageNum < pageCount - 3 ? pageCount : undefined
+        pageButtonsPrev: pageNum > 1 ? pageNum - 1 : null,
+        pageButtonsNext: pageNum < pageCount ? pageNum + 1 : null,
+        pageButtonsFirst: pageNum > 4 ? 1 : null,
+        pageButtonsLast: pageNum < pageCount - 3 ? pageCount : null
     });
 });
 
