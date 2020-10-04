@@ -31,10 +31,10 @@ html
         if pageButtonsPrev
           form(type="GET" action=`/${pageButtonsPrev}`)
             button(class="page-button" type="submit" value=pageButtonsPrev) <
-          if pageButtonsFirst
-            form(type="GET" action=`/${pageButtonsFirst}`)
-              button(class="page-button" type="submit" value=pageButtonsFirst) #{pageButtonsFirst}
-            div(class="page-button-empty") ...
+        if pageButtonsFirst
+          form(type="GET" action=`/${pageButtonsFirst}`)
+            button(class="page-button" type="submit" value=pageButtonsFirst) #{pageButtonsFirst}
+          div(class="page-button-empty") ...
         for button in pageButtons
           form(type="GET" action=`/${button}`)
             if button === pageButtonsSelected
